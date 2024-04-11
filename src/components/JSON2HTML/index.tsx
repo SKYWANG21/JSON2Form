@@ -1,4 +1,4 @@
-import { withModifiers, defineComponent } from 'vue';
+import { withModifiers, defineComponent, Ref } from 'vue';
 export interface Data {
   /** 元素名 */
   name: any;
@@ -14,6 +14,8 @@ export interface Data {
   vIf?: boolean;
   /** innerText */
   cont?: string;
+  /** 模板引用 */
+  ref?: Ref;
 }
 
 export const JSON2Form = defineComponent(
@@ -28,7 +30,7 @@ export const JSON2Form = defineComponent(
         });
         if (it.vIf ?? true) {
           return (
-            <it.name {...it.props} {...it.event} {...update}>
+            <it.name {...it.props} {...it.event} {...update} ref={it.ref}>
               {(() => (it.children && it.children.length > 0 ? translate(it.children) : it.cont))()}
             </it.name>
           )
