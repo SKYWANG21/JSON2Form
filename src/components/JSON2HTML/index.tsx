@@ -1,7 +1,7 @@
 import { withModifiers, defineComponent, Ref } from 'vue';
 export interface Data {
   /** 元素名 */
-  name: any;
+  type: any;
   /** 属性 */
   props?: { [key: string]: any };
   /** 表单数据 */
@@ -18,26 +18,30 @@ export interface Data {
   ref?: Ref;
 }
 
+/**
+ * @param data 渲染数据
+ * @param model 表单数据
+ */
 export const JSON2Form = defineComponent(
-  (props: { data: Data[]; model: Record<string, any> }) => {
+  (props: { data: Data[]; model?: Record<string, any> }) => {
     function translate(params: Data[]) {
       return params.map((it) => {
         const update = {};
         it.formModel?.forEach((el) => {
           update[`onUpdate:${el[1] ?? 'modelValue'}`] = (e) => {
-            props.model[el[0]] = e;
-          }
+            props.model![el[0]] = e;
+          };
         });
         if (it.vIf ?? true) {
           return (
-            <it.name {...it.props} {...it.event} {...update} ref={it.ref}>
+            <it.type {...it.props} {...it.event} {...update} ref={it.ref}>
               {(() => (it.children && it.children.length > 0 ? translate(it.children) : it.cont))()}
-            </it.name>
-          )
+            </it.type>
+          );
         } else {
           return null;
         }
-      })
+      });
     }
     return () => {
       return translate(props.data);
