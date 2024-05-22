@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Data, JSON2Form } from './components/JSON2HTML';
+import { Canvas } from './components'
 
 const data: Data[] = [
   {
-    type: 'div',
-    cont: 'hello world',
+    type: Canvas,
+    // cont: 'hello world',
   },
 ];
 </script>
