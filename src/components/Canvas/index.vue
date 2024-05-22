@@ -4,7 +4,7 @@
     <button @click="edit">拉框</button>
     <button @click="marking">标注</button>
   </div>
-  <canvas id="canvas" width="600px" height="600px"></canvas>
+  <canvas id="canvas" width="512px" height="512px"></canvas>
 </template>
 
 <script setup lang="ts">
@@ -23,8 +23,6 @@ function init() {
     top: 0,
     opacity: 1
   });
-
-  console.log(canvas)
 
   canvas.setBackgroundImage(img, () => {
     canvas.renderAll()
@@ -53,7 +51,6 @@ function edit() {
 
   // 鼠标按下事件
   canvas.on('mouse:down', function (e) {
-    // 按住 Alt 键时才可拖动画布
     // 标志用户正在按住鼠标左键拖拉选区
     hasClicked = true;
     // 创建一个不可见的矩形选区
@@ -97,21 +94,23 @@ function edit() {
       // canvas.remove(selectionRect); // 移除选区
     }
   });
-
 }
 
 function marking() {
   // 创建一个可编辑的文本框
-  var text = new fabric.IText('特征', {
-    left: 100, // x轴位置
-    top: 100, // y轴位置
-    fontSize: 18, // 字体大小
-    fill: 'red', // 字体颜色
-    editable: true // 允许编辑
-  });
+  canvas.on('mouse:down', function (e) {
+    var text = new fabric.IText('请输入', {
+      left: e.e.layerX,
+      top: e.e.layerY,
+      fontSize: 18, // 字体大小
+      fill: 'red', // 字体颜色
+      editable: true // 允许编辑
+    });
 
-  // 将文本框添加到画布
-  canvas.add(text);
+    // 将文本框添加到画布
+    canvas.add(text);
+    canvas.off('mouse:down')
+  })
 }
 
 onMounted(() => {
